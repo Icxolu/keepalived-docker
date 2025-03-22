@@ -21,7 +21,7 @@ RUN apk add --no-cache \
     ipvsadm    \
     iproute2   \
     keepalived \
- && rm /etc/keepalived/keepalived.conf
+ && rm -f /etc/keepalived/keepalived.conf
 
 COPY /skel /
 
