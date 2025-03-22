@@ -56,6 +56,21 @@ config_keepalived() {
     } >> "$KEEPALIVED_CONF"
   fi
 
+  if [[ $KEEPALIVED_HEALTH_CMD ]]; then
+
+    KEEPALIVED_HEALTH_CMD_INTERVAL=${KEEPALIVED_HEALTH_CMD_INTERVAL:-'5'}
+    KEEPALIVED_HEALTH_CMD_FALL=${KEEPALIVED_HEALTH_CMD_FALL:-'2'}
+    KEEPALIVED_HEALTH_CMD_RISE=${KEEPALIVED_HEALTH_CMD_RISE:-'2'}
+    {
+      echo 'vrrp_script health_cmd {'
+      echo "  script \"$KEEPALIVED_HEALTH_CMD\""
+      echo "  interval $KEEPALIVED_HEALTH_CMD_INTERVAL"
+      echo "  fall $KEEPALIVED_HEALTH_CMD_FALL"
+      echo "  rise $KEEPALIVED_HEALTH_CMD_RISE"
+      echo '}'
+    } >> "$KEEPALIVED_CONF"
+  fi
+
   {
     echo 'vrrp_instance MAIN {'
     echo "  state $KEEPALIVED_STATE"
@@ -107,6 +122,13 @@ config_keepalived() {
    {
      echo '  track_script {'
      echo '    chk_kube_apiserver'
+     echo '  }'
+   } >> "$KEEPALIVED_CONF"
+ fi
+ if [[ $KEEPALIVED_HEALTH_CMD ]]; then
+   {
+     echo '  track_script {'
+     echo '    health_cmd'
      echo '  }'
    } >> "$KEEPALIVED_CONF"
  fi

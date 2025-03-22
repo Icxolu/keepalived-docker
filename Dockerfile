@@ -20,6 +20,7 @@ RUN apk add --no-cache \
     curl       \
     ipvsadm    \
     iproute2   \
+    bind-tools \
     keepalived \
  && mkdir -p /etc/keepalived && rm -f /etc/keepalived/keepalived.conf
 
